@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
+<package format="3">
+  <name>haruto_mecanum_hardware</name>
+  <version>1.0.0</version>
+  <description>Mecanum hardware interface</description>
+  <maintainer email="santechselva@gmail.com">Santosh Balaji Selvaraj</maintainer>
+  <license>Apache License 2.0</license>
+  <author email="santechselva@gmail.com">Santosh Balaji Selvaraj</author>
+
+  <buildtool_depend>ament_cmake</buildtool_depend>
+  
+  <depend>hardware_interface</depend>
+  <depend>rclcpp</depend>
+
+  <build_depend>pluginlib</build_depend>
+
+  <export>
+    <build_type>ament_cmake</build_type>
+  </export>
+</package>
