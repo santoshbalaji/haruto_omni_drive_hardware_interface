@@ -1,69 +1,62 @@
-cmake_minimum_required(VERSION 3.8)
-project(haruto_mecanum_hardware)
+cmake_minimum_required(VERSION 3.16)
+project(haruto_omni_drive_hardware_interface LANGUAGES CXX)
 
-if(NOT CMAKE_C_STANDARD)
-  set(CMAKE_C_STANDARD 99)
+if(CMAKE_CXX_COMPILER_ID MATCHES "(GNU|Clang)")
+  add_compile_options(-Wall -Wextra)
 endif()
 
-if(NOT CMAKE_CXX_STANDARD)
-  set(CMAKE_CXX_STANDARD 17)
-endif()
-
-if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
-  add_compile_options(-Wall -Wextra -Wpedantic)
-endif()
-
-find_package(ament_cmake REQUIRED)
-find_package(hardware_interface REQUIRED)
-find_package(pluginlib REQUIRED)
-find_package(rclcpp REQUIRED)
-
-add_library(
-  ${PROJECT_NAME}
-  SHARED
-  src/mecanum_hardware.cpp
-  src/serial_control.cpp
+# find dependencies
+set(THIS_PACKAGE_INCLUDE_DEPENDS
+  hardware_interface
+  pluginlib
+  rclcpp
+  rclcpp_lifecycle
 )
 
-target_include_directories(
-  ${PROJECT_NAME}
-  PRIVATE
-  include
+find_package(ament_cmake REQUIRED)
+foreach(Dependency IN ITEMS ${THIS_PACKAGE_INCLUDE_DEPENDS})
+  find_package(${Dependency} REQUIRED)
+endforeach()
+
+add_library(
+  haruto_omni_drive_hardware_interface
+  SHARED
+  src/serial_control.cpp
+  src/omni_drive_system_interface.cpp
+)
+
+target_compile_features(haruto_omni_drive_hardware_interface PUBLIC cxx_std_17)
+
+target_include_directories(haruto_omni_drive_hardware_interface PUBLIC
+$<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include>
+$<INSTALL_INTERFACE:include/haruto_omni_drive_hardware_interface>
 )
 
 ament_target_dependencies(
-  ${PROJECT_NAME}
-  hardware_interface
-  pluginlib
-  rclcpp
+  haruto_omni_drive_hardware_interface PUBLIC
+  ${THIS_PACKAGE_INCLUDE_DEPENDS}
 )
 
-pluginlib_export_plugin_description_file(hardware_interface mecanum_hardware_plugin.xml)
+target_compile_definitions(${PROJECT_NAME} PRIVATE "HARUTO_OMNI_DRIVE_HARDWARE_INTERFACE_BUILDING_DLL")
+
+pluginlib_export_plugin_description_file(haruto_omni_drive_hardware_interface omni_drive_hardware_interface_plugin.xml)
 
 install(
-  TARGETS
-    ${PROJECT_NAME}
-  DESTINATION lib
+  DIRECTORY include/
+  DESTINATION include/haruto_omni_drive_hardware_interface
 )
 
-install(
-  DIRECTORY
-    include
-  DESTINATION include
+install(TARGETS haruto_omni_drive_hardware_interface
+  EXPORT haruto_omni_drive_hardware_interface
+  ARCHIVE DESTINATION lib
+  LIBRARY DESTINATION lib
+  RUNTIME DESTINATION bin
 )
 
-ament_export_include_directories(
-  include
-)
+if(BUILD_TESTING)
+  find_package(ament_cmake_gtest REQUIRED)
+endif()
 
-ament_export_libraries(
-  ${PROJECT_NAME}
-)
-
-ament_export_dependencies(
-  hardware_interface
-  pluginlib
-  rclcpp
-)
-
+# ament_export_targets(export_haruto_omni_drive_hardware_interface HAS_LIBRARY_TARGET)
+ament_export_dependencies(${THIS_PACKAGE_INCLUDE_DEPENDS})
 ament_package()

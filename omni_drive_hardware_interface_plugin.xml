@@ -1,0 +1,9 @@
+<library path="haruto_omni_drive_hardware_interface">
+  <class name="haruto_omni_drive_hardware_interface/OmniDriveSystemInterface"
+         type="haruto_omni_drive_hardware_interface::OmniDriveSystemInterface"
+         base_class_type="hardware_interface::SystemInterface">
+    <description>
+      Hardware interface for serial commnuication with arduino based controller
+    </description>
+  </class>
+</library>

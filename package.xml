@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
 <package format="3">
-  <name>haruto_mecanum_hardware</name>
+  <name>haruto_omni_drive_hardware_interface</name>
   <version>1.0.0</version>
   <description>Mecanum hardware interface</description>
   <maintainer email="santechselva@gmail.com">Santosh Balaji Selvaraj</maintainer>
